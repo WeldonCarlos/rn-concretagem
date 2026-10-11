@@ -1,17 +1,55 @@
-import { useState } from 'react'
-import './App.css'
-import { Outlet } from 'react-router-dom'
-import Header from './components/header/Header'
-import Footer from './components/footer/Footer'
-
+import { useEffect, useRef, useState } from 'react';
+import upStudioLogo from './assets/branding/up-studio-digital.png';
+import logo from './assets/Logo.png';
+import paving from './assets/optimized/pavimento.jpg';
+import street from './assets/optimized/lajotas.jpg';
+import drainagePhoto from './assets/optimized/drenagem.webp';
+import PaverBuild from './components/about/PaverBuild.jsx';
+import FloatingSocial from './components/social/FloatingSocial.jsx';
+import earth from './assets/optimized/terraplanagem.jpg';
+import work2 from './assets/optimized/obra-02.jpg';
+import work3 from './assets/optimized/obra-03.jpg';
+import './App.css';
+import Icon from './components/ui/Icon.jsx';
+import paverProduct from './assets/products/paver.png';
+import tileProduct from './assets/products/lajota.png';
+import HeroBackground from './components/hero/HeroBackground.jsx';
+const whatsapp = 'https://wa.me/554899668246';
+const instagram = 'https://www.instagram.com/rn_concretagem/';
+const nav = [['empresa','Sobre nós'],['servicos','Serviços'],['produtos','Produtos'],['obras','Obras'],['contato','Contato']];
+function Action({ children = 'Solicitar orçamento', subject = '', secondary = false, icon = 'forward' }) { return <a className={`action ${secondary ? 'secondary' : ''}`} href={`${whatsapp}${subject ? '?text='+encodeURIComponent('Olá! Gostaria de um orçamento para '+subject+'.') : ''}`} target="_blank" rel="noopener noreferrer">{children}<Icon name={icon} /></a>; }
 function App() {
-  const [count, setCount] = useState(0)
+ const [menu, setMenu] = useState(false);
+ const [consent, setConsent] = useState(() => { try { const value=localStorage.getItem('rn-consent-v1'); return ['accepted','rejected'].includes(value) ? value : null; } catch { return null; } });
+ const [privacy, setPrivacy] = useState(false);
+ const [photo, setPhoto] = useState(null);
+ const [service, setService] = useState('Terraplanagem');
+ const [city, setCity] = useState('');
+ const [details, setDetails] = useState('');
+ const dialog = useRef(null);
+ const lastFocus = useRef(null);
+ const choose = (value) => { try { localStorage.setItem('rn-consent-v1', value); } catch { /* Choice remains valid for this visit. */ } setConsent(value); };
+ useEffect(() => { const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target);}}),{threshold:.08}); document.querySelectorAll('.reveal').forEach(el=>observer.observe(el)); return ()=>observer.disconnect(); },[]);
+ useEffect(() => { if(photo !== null){lastFocus.current=document.activeElement;dialog.current.showModal();} else if(dialog.current?.open){dialog.current.close();lastFocus.current?.focus();} },[photo]);
+ useEffect(() => { const path=location.pathname.slice(1); const ids={empresa:'empresa',servicos:'servicos',obras:'obras',contato:'contato',produtos:'produtos'}; if(ids[path]) document.getElementById(ids[path])?.scrollIntoView(); },[]);
+ const gallery=[{src:paving,alt:'Pavimentação com pavers em área externa'},{src:work2,alt:'Registro de obra do acervo RN'},{src:work3,alt:'Registro de pavimentação do acervo RN'}];
+ const quote = `${whatsapp}?text=${encodeURIComponent(`Olá, RN Concretagem! Gostaria de um orçamento.\nInteresse: ${service}\nCidade: ${city.trim()}\nDetalhes: ${details.trim()}`)}`;
+ return <>
+ <a className="skip" href="#principal">Pular para o conteúdo</a>
+ <header className="header"><a className="brand" href="#inicio" aria-label="RN Concretagem — início"><img src={logo} alt="RN Terraplanagem" /><span>CONCRETAGEM</span></a><button className="menu-toggle" aria-controls="navigation" aria-expanded={menu} onClick={()=>setMenu(!menu)}><Icon name={menu ? 'close' : 'menu'} />{menu ? 'Fechar' : 'Menu'}</button><nav id="navigation" className={menu?'open':''} aria-label="Principal">{nav.map(([id,label])=><a key={id} href={`#${id}`} onClick={()=>setMenu(false)}>{label}</a>)}</nav><div className="header-cta"><Action icon="whatsapp">Fale com a RN</Action></div></header>
+ <main id="principal">
+ <section id="inicio" className="hero"><HeroBackground /><div className="hero-shade"/><div className="hero-content"><p className="eyebrow light"><span/> DA BASE AO ACABAMENTO</p><h1>Uma base sólida.<br/>Um caminho<br/><em>bem construído.</em></h1><p className="hero-description">Terraplanagem, pavimentação e drenagem.<br/>Pavers e lajotas de fabricação própria para sua obra.</p><div className="hero-actions"><Action>Vamos construir seu projeto</Action><a className="action solutions-action" href="#servicos">Conheça nossas soluções <Icon name="arrowRight" /></a></div></div><div className="hero-bottom"><span>RN CONCRETAGEM</span><span>INFRAESTRUTURA & PAVIMENTAÇÃO</span><a className="scroll-cue" href="#servicos" aria-label="Explorar serviços"><Icon name="chevronDown" /></a></div></section>
+ <div className="solution-strip"><span><strong>Preparar o terreno</strong></span><span><strong>Executar a infraestrutura</strong></span><span><strong>Pavimentar com a RN</strong></span></div>
+ <section id="empresa" className="section about paver-about"><PaverBuild /><div><p className="eyebrow">A RN CONCRETAGEM</p><h2>O cuidado começa<br/>antes do primeiro bloco.</h2></div><div className="about-copy"><p>Uma obra envolve mais do que o acabamento. O terreno, o escoamento da água e a pavimentação precisam fazer parte da mesma conversa.</p><p>A RN Concretagem atua com terraplanagem, pavimentação em pavers e lajotas e instalação de saneamento e drenagem com manilhas em ruas públicas. Também fabrica e vende seus próprios pavers e lajotas.</p><a className="inline-link" href="#contato">Conte para nós o que sua obra precisa <Icon name="arrowRight" /></a></div></section>
+ <section id="servicos" className="section services"><div className="section-heading reveal"><div><p className="eyebrow">SERVIÇOS</p><h2>Estrutura para<br/>seguir em frente.</h2></div><p>Do preparo do terreno à pavimentação.<br/>Conheça as frentes de trabalho da RN.</p></div><div className="service-grid"><article className="service-card reveal"><div className="image-wrap"><img src={earth} alt="Máquina em trabalho de terraplanagem, acervo RN" loading="lazy"/></div><h3>Terraplanagem</h3><p>Preparação e movimentação de terra para dar início à execução da sua obra.</p><Action secondary subject="terraplanagem">Orçar terraplanagem</Action></article><article className="service-card reveal"><div className="image-wrap"><img src={street} alt="Pavimentação em lajotas em uma rua, acervo RN" loading="lazy"/></div><h3>Pavimentação</h3><p>Construção de pavimentos com lajotas e pavers, os pequenos blocos de concreto.</p><Action secondary subject="pavimentação">Orçar pavimentação</Action></article><article className="service-card drainage reveal"><div className="image-wrap"><img src={drainagePhoto} alt="Manilha de concreto em execução de drenagem, foto do site oficial da RN" loading="lazy" /></div><h3>Saneamento e drenagem</h3><p>Instalação de manilhas para o escoamento da água e infraestrutura em ruas públicas.</p><Action secondary subject="saneamento e drenagem">Orçar drenagem</Action></article></div></section>
+ <section id="produtos" className="products"><div className="section product-inner"><div className="reveal"><p className="eyebrow light">FABRICAÇÃO & VENDA</p><h2>Da nossa produção<br/>para o seu projeto.</h2><p className="product-intro">Além de executar a pavimentação, a RN fabrica e vende pavers e lajotas. Converse com a equipe sobre os produtos disponíveis e a quantidade necessária para sua obra.</p><Action subject="compra de pavers e lajotas">Consultar produtos</Action></div><div className="product-list reveal"><article><div className="product-photo"><img src={paverProduct} alt="Foto de referência de um paver retangular de concreto" loading="lazy" /></div><div><span className="tag">FABRICAÇÃO PRÓPRIA</span><h3>Pavers</h3><p>Blocos de concreto para pavimentação.</p><a href={`${whatsapp}?text=${encodeURIComponent('Olá! Quero consultar modelos, medidas e valores de pavers.')}`} target="_blank" rel="noopener noreferrer">Consultar disponibilidade <Icon name="whatsapp" /></a></div></article><article><div className="product-photo"><img src={tileProduct} alt="Foto de referência de uma lajota sextavada de concreto" loading="lazy" /></div><div><span className="tag">FABRICAÇÃO PRÓPRIA</span><h3>Lajotas</h3><p>Peças de concreto para pavimentar.</p><a href={`${whatsapp}?text=${encodeURIComponent('Olá! Quero consultar modelos, medidas e valores de lajotas.')}`} target="_blank" rel="noopener noreferrer">Consultar disponibilidade <Icon name="whatsapp" /></a></div></article><small>Fotos de referência de produtos de concreto. Modelos, medidas, cores, valores e condições de fornecimento da RN sob consulta.</small></div></div></section>
+ <section id="obras" className="section works"><div className="section-heading reveal"><div><p className="eyebrow">NA PRÁTICA</p><h2>O trabalho<br/>ganha forma.</h2></div><div><p>Registros de pavimentação do acervo da RN.</p><a className="inline-link" href={instagram} target="_blank" rel="noopener noreferrer">Acompanhe no Instagram <Icon name="instagram" /></a></div></div><div className="gallery">{gallery.map((item,i)=><button className="gallery-item reveal" key={item.src} onClick={()=>setPhoto(i)} aria-label={`Ampliar foto ${i+1}: ${item.alt}`}><img src={item.src} alt={item.alt} loading="lazy"/><span className="gallery-expand"><Icon name="expand" /></span></button>)}</div></section>
 
-  return (
-    <>
-      <Outlet/>
-    </>
-  )
+ <section id="contato" className="contact"><div className="section contact-grid"><div><p className="eyebrow light">FALE COM A RN</p><h2>Vamos tirar seu<br/>projeto do papel?</h2><p>Solicite um orçamento de serviço ou consulte nossos produtos. Sua mensagem abre diretamente no WhatsApp.</p><a className="phone" href={whatsapp} target="_blank" rel="noopener noreferrer">+55 48 9966-8246 <Icon name="whatsapp" /></a></div><form onSubmit={event=>{event.preventDefault();window.open(quote,'_blank','noopener,noreferrer');}}><label htmlFor="interest">O que você precisa?</label><select id="interest" value={service} onChange={e=>setService(e.target.value)}>{['Terraplanagem','Pavimentação','Saneamento e drenagem','Comprar pavers','Comprar lajotas'].map(value=><option key={value}>{value}</option>)}</select><label htmlFor="city">Cidade da obra</label><input id="city" value={city} onChange={e=>setCity(e.target.value)} placeholder="Informe sua cidade" maxLength={100} required/><label htmlFor="details">Conte um pouco sobre seu projeto</label><textarea id="details" value={details} onChange={e=>setDetails(e.target.value)} placeholder="Área aproximada, quantidade ou serviço desejado..." rows={3} maxLength={1500}/><button className="action" type="submit">Preparar mensagem no WhatsApp <Icon name="whatsapp" /></button><small>Os dados são enviados apenas ao abrir a conversa e enviar a mensagem no WhatsApp.</small></form></div></section>
+ </main><footer><div><a className="brand" href="#inicio"><img src={logo} alt="RN Terraplanagem"/><span>CONCRETAGEM</span></a><p>Terraplanagem, pavimentação, drenagem.<br/>Fabricação e venda de pavers e lajotas.</p></div><div className="footer-links">{nav.map(([id,label])=><a href={`#${id}`} key={id}>{label}</a>)}</div><div className="footer-bottom"><span>© {new Date().getFullYear()} RN Concretagem</span><button onClick={()=>setPrivacy(!privacy)} aria-expanded={privacy}>Privacidade</button><button onClick={()=>setConsent(null)}>Preferências de cookies</button><div className="creator-credit"><span>Desenvolvido por</span><a className="creator-logo" href="https://upstudiodigital.com.br/" target="_blank" rel="noopener noreferrer" aria-label="Visitar o site da Up Studio Digital (abre em nova aba)" title="Visitar Up Studio Digital"><img src={upStudioLogo} alt="Up Studio Digital" loading="lazy" /></a></div></div>{privacy&&<div className="privacy"><h3>Privacidade e preferências</h3><p>Este site não carrega ferramentas de análise, publicidade ou rastreadores opcionais. Sua preferência é guardada neste navegador usando armazenamento local. O formulário não armazena seus dados em um servidor; ele prepara uma mensagem para você enviar pelo WhatsApp. Ao acessar WhatsApp ou Instagram, aplicam-se as políticas desses serviços.</p><button onClick={()=>setPrivacy(false)}>Fechar</button></div>}</footer>
+ {consent===null&&<aside className="cookie" aria-label="Preferências de cookies"><div><strong>Sua privacidade, sua escolha.</strong><p>Usamos armazenamento local para lembrar sua escolha. Nenhum rastreador opcional é carregado.</p></div><button onClick={()=>choose('rejected')}>Rejeitar opcionais</button><button className="accept" onClick={()=>choose('accepted')}>Aceitar</button></aside>}
+ <FloatingSocial available={consent !== null && photo === null} />
+ <dialog ref={dialog} className="photo-dialog" onCancel={()=>setPhoto(null)} onClick={e=>{if(e.target===dialog.current)setPhoto(null);}} aria-label="Foto ampliada"><button autoFocus onClick={()=>setPhoto(null)} aria-label="Fechar foto"><Icon name="close" /></button>{photo!==null&&<><img src={gallery[photo].src} alt={gallery[photo].alt}/><p>{gallery[photo].alt}</p></>}</dialog>
+ </>;
 }
-
-export default App
+export default App;
