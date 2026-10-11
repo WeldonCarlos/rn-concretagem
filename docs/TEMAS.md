@@ -1,6 +1,6 @@
 # Roupagens da RN: padrão, Natal e Réveillon
 
-O site continua em React + Vite, sem PHP e sem backend. Os textos comerciais, contatos e botões continuam os mesmos. A roupagem acrescenta uma saudação e decorações; `padrao` remove todas as decorações festivas.
+O site continua em React + TypeScript + Vite, sem PHP e sem backend. Os textos comerciais, contatos e botões continuam os mesmos. A roupagem acrescenta uma saudação e decorações; `padrao` remove todas as decorações festivas.
 
 ## Escolher no .env
 
@@ -58,6 +58,8 @@ Os assets prontos ficam em `public/media/`. `scripts/create-seasonal-media.py` �
 
 ```sh
 npm test
+npm run typecheck
+npm run lint
 npm run build
 ```
 

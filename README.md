@@ -1,6 +1,18 @@
 # RN Concretagem
 
-Site institucional React + Vite, reformulado a partir da branch `develop` do repositório original.
+Site institucional React + TypeScript + Vite, reformulado a partir da branch `develop` do repositório original.
+
+## TypeScript
+
+Componentes em `.tsx`; lógica, scripts, testes e configurações em `.ts`. O `tsconfig.json` usa modo estrito, sem `allowJs`, e inclui aplicação, scripts e testes. Props, referências HTML, timers, ícones e temas têm tipos explícitos.
+
+```sh
+npm run typecheck
+npm run lint
+npm test
+```
+
+O build executa a verificação de tipos antes de gerar os arquivos de produção. Os módulos antigos que não eram utilizados pela aplicação atual foram removidos. As fotos e mídias do acervo foram preservadas.
 
 ## Temas sazonais
 
@@ -50,7 +62,7 @@ Os componentes antigos permanecem no repositório para referência, mas não sã
 
 React e React DOM 19.3.0, Vite 8.3.4 e @vitejs/plugin-react 6.1.2, versões estáveis confirmadas no npm oficial. Versões fixadas para reprodução consistente da instalação. Node exigido: ^20.19.0 ou >=22.12.0; ambiente validado com Node 24.19.0.
 
-Bibliotecas antigas sem uso pela aplicação reformulada foram retiradas do package.json para evitar conflitos de peer dependencies com React 19. Os componentes antigos permanecem apenas como referência e não são importados. Use npm e package-lock.json para instalar a aplicação; yarn.lock é um registro legado.
+Bibliotecas antigas sem uso pela aplicação reformulada foram retiradas do package.json para evitar conflitos de peer dependencies com React 19. Os componentes antigos sem uso foram removidos na migração para TypeScript. Use npm e package-lock.json para instalar a aplicação; o yarn.lock legado foi removido.
 
 Vídeo original localizado no elemento video de https://www.rnterraplanagem.com.br/:
 https://www.rnterraplanagem.com.br/assets/del_porto-Cenwf7rY.mp4
@@ -64,7 +76,7 @@ Vídeo final: 7.319.185 bytes (aproximadamente 7,3 MB), redução de cerca de 95
 
 ## Ajustes de interface — 10/10/2026
 
-- Ícones SVG locais em src/components/ui/Icon.jsx: WhatsApp, avanço, navegação para baixo, pausa/reprodução, Instagram, ampliação e fechamento.
+- Ícones SVG locais em src/components/ui/Icon.tsx: WhatsApp, avanço, navegação para baixo, pausa/reprodução, Instagram, ampliação e fechamento.
 - Header: Sobre nós e botão Fale com a RN com ícone WhatsApp.
 - Chamada principal com fonte maior; Conheça nossas soluções como botão claro de navegação interna.
 - Fonte variável Manrope servida localmente pelo pacote @fontsource-variable/manrope; hierarquia, entrelinha e espaçamento das seções revisados.
@@ -104,7 +116,7 @@ Refinamento dos pavers: a face superior da fotografia src/assets/products/paver.
 Transição inferior dos pavers com degradê para #f6f5f2, integrando a seção Serviços sem linha brusca. Encaixe acelerado de 95 ms para 75 ms por peça, mantendo a sequência individual.
 
 
-Chamadas automáticas do Instagram atualizadas: primeira após 12 segundos de navegação elegível; segunda 30 segundos após fechar a primeira; terceira 60 segundos após fechar a segunda. Limite de três por sessão, com persistência em rn-instagram-reminders-v3. Abrir manualmente não consome uma chamada automática. Visitar o Instagram encerra os lembretes. Testes de temporização: node --test tests/instagram-reminders.test.js (3 aprovados).
+Chamadas automáticas do Instagram atualizadas: primeira após 12 segundos de navegação elegível; segunda 30 segundos após fechar a primeira; terceira 60 segundos após fechar a segunda. Limite de três por sessão, com persistência em rn-instagram-reminders-v3. Abrir manualmente não consome uma chamada automática. Visitar o Instagram encerra os lembretes. Testes de temporização em tests/instagram-reminders.test.ts, executados com npm test.
 
 
 Logo Up Studio Digital agora é link para https://upstudiodigital.com.br/, abre em nova aba e possui reação visual em hover, toque e foco de teclado. Corrigido o contexto dos timers nativos para compatibilidade com o navegador.
