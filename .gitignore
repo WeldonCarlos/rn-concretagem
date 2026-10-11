@@ -26,3 +26,8 @@ dist-ssr
 # Local tools and review deliverables
 work/
 outputs/
+
+# Private environment settings
+.env
+.env.*
+!.env.example

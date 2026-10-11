@@ -1,6 +1,10 @@
 # RN Concretagem
 
-Site institucional React + Vite, reformulado a partir da branch `develop` do repositório original. Desenvolvimento exclusivo nesta pasta; nenhum deploy ou push foi realizado.
+Site institucional React + Vite, reformulado a partir da branch `develop` do repositório original.
+
+## Temas sazonais
+
+Três roupagens: `padrao`, `natal` e `reveillon` (Feliz 2027). A seleção usa `RN_THEME` no `.env`. Na hospedagem estática, execute `npm run theme:sync` e envie apenas `site-theme.json` para trocar sem recompilar o React. Consulte [o guia de temas e Hostinger](docs/TEMAS.md).
 
 ## Executar
 
